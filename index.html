@@ -61,19 +61,26 @@
       margin-bottom: 15px;
     }
     .balloon {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background-size: cover;
-      background-position: center;
-
       position: absolute;
       bottom: -150px;
-      width: 50px;
-      height: 70px;
+      width: 80px;
+      height: 100px;
       border-radius: 50% 50% 50% 50%;
-      opacity: 0.7;
+      opacity: 0.9;
       animation: floatUp 10s linear infinite;
+      background-size: cover;
+      background-position: center;
+    }
+    /* Rope for balloon */
+    .balloon::after {
+      content: "";
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      width: 2px;
+      height: 50px;
+      background: #555;
+      transform: translateX(-50%);
     }
     @keyframes floatUp {
       from { transform: translateY(0); }
@@ -171,12 +178,19 @@
 
     // Balloons animation
     function createBalloons() {
-      for(let i=0;i<5;i++) {
+      for(let i=0;i<7;i++) {
         const balloon = document.createElement('div');
         balloon.classList.add('balloon');
         balloon.style.left = Math.random() * 100 + 'vw';
-        balloon.style.background = `url('trainer.webp') no-repeat center / cover`;
         balloon.style.animationDuration = (5 + Math.random()*5) + 's';
+
+        // Randomize: 50% photo, 50% colorful
+        if (Math.random() > 0.5) {
+          balloon.style.background = `url('trainer.webp') no-repeat center / cover`;
+        } else {
+          balloon.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+        }
+
         document.body.appendChild(balloon);
         setTimeout(() => balloon.remove(), 10000);
       }
