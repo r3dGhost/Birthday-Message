@@ -1,213 +1,39 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>🎂 Birthday Surprise 🎂</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: linear-gradient(135deg, #ffecd2, #fcb69f);
-      overflow: hidden;
-    }
-    .container {
-      text-align: center;
-      background: #fff;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      max-width: 400px;
-      width: 90%;
-      position: relative;
-      z-index: 2;
-    }
-    h1 {
-      font-size: 2rem;
-      margin: 0 0 10px;
-      color: #ff4e8a;
-    }
-    p {
-      font-size: 1rem;
-      color: #333;
-      margin-bottom: 20px;
-    }
-    button {
-      background: #ff4e8a;
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #ff2a6d;
-    }
-    .hidden { display: none; }
-    .message h2 {
-      font-size: 2rem;
-      color: #ff4e8a;
-      margin-bottom: 10px;
-    }
-    .message p {
-      font-size: 1rem;
-      color: #444;
-      margin-bottom: 15px;
-    }
-    .balloon {
-      position: absolute;
-      bottom: -150px;
-      width: 80px;
-      height: 100px;
-      opacity: 0.9;
-      animation: floatUp 10s linear infinite;
-      background-size: cover;
-      background-position: center;
-    }
-    /* Curly rope for balloon */
-    .balloon::after {
-      content: "";
-      position: absolute;
-      bottom: -60px;
-      left: 50%;
-      width: 2px;
-      height: 60px;
-      background: repeating-linear-gradient(
-        to bottom,
-        #555 0px,
-        #555 4px,
-        transparent 4px,
-        transparent 8px
-      );
-      transform: translateX(-50%) rotate(5deg);
-      animation: ropeWave 1s infinite ease-in-out;
-    }
-    @keyframes ropeWave {
-      0%   { transform: translateX(-50%) rotate(5deg); }
-      50%  { transform: translateX(-50%) rotate(-5deg); }
-      100% { transform: translateX(-50%) rotate(5deg); }
-    }
-    @keyframes floatUp {
-      from { transform: translateY(0); }
-      to { transform: translateY(-120vh); }
-    }
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-  </style>
-</head>
-<body>
-  <canvas id="confetti"></canvas>
+// Balloons animation (mix of photo + colorful + curly ropes)
+function createBalloons() {
+  for (let i = 0; i < 7; i++) {
+    const balloon = document.createElement('div');
+    balloon.classList.add('balloon');
+    balloon.style.left = Math.random() * 100 + 'vw';
+    balloon.style.animationDuration = (5 + Math.random() * 5) + 's';
 
-  <!-- First screen -->
-  <div class="container" id="intro">
-    <h1>🎁 You’ve got a surprise!</h1>
-    <p>Click the button below to reveal your birthday message 🎉</p>
-    <button id="revealBtn">Click to Reveal</button>
-  </div>
-
-  <!-- Birthday message screen -->
-  <div class="container hidden" id="messageBox">
-    <div class="message">
-      <h2>🎂 Happy Birthday Ma’am!</h2>
-      <p>It’s always been such a joy working together with you. Your guidance, patience, and support truly made a difference and inspired me a lot. 💖</p>
-      <p>Wishing you endless happiness, good health, and all the success you deserve. May this special day be filled with love and laughter! 🎉</p>
-    </div>
-    <button id="celebrateBtn">Celebrate Again 🎈</button>
-  </div>
-
-  <!-- Korean Happy Birthday Song -->
-  <audio id="birthdaySong" preload="auto">
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4a1b3adf84.mp3?filename=happy-birthday-to-you-12345.mp3" type="audio/mpeg">
-  </audio>
-
-  <script>
-    const intro = document.getElementById('intro');
-    const messageBox = document.getElementById('messageBox');
-    const revealBtn = document.getElementById('revealBtn');
-    const celebrateBtn = document.getElementById('celebrateBtn');
-    const song = document.getElementById('birthdaySong');
-
-    revealBtn.addEventListener('click', () => {
-      intro.classList.add('hidden');
-      messageBox.classList.remove('hidden');
-      startConfetti();
-      createBalloons();
-      playSong();
-    });
-
-    celebrateBtn.addEventListener('click', () => {
-      startConfetti();
-      createBalloons();
-      playSong();
-    });
-
-    function playSong() {
-      song.currentTime = 0;
-      song.play();
+    // Randomize: 50% photo balloon, 50% colorful balloon
+    if (Math.random() > 0.5) {
+      balloon.style.background = `url('trainer.webp') no-repeat center / cover`;
+      balloon.style.borderRadius = "50%";
+    } else {
+      balloon.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+      balloon.style.borderRadius = "50% 50% 50% 50%";
     }
 
-    // Confetti animation
-    function startConfetti() {
-      const canvas = document.getElementById('confetti');
-      const ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    // Create curly rope using SVG
+    const rope = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    rope.setAttribute("width", "20");
+    rope.setAttribute("height", "80");
+    rope.style.position = "absolute";
+    rope.style.left = "50%";
+    rope.style.top = "100%";
+    rope.style.transform = "translateX(-50%)";
+    rope.innerHTML = `
+      <path d="M10 0 Q 0 10, 10 20 Q 20 30, 10 40 Q 0 50, 10 60 Q 20 70, 10 80"
+            stroke="#555" stroke-width="2" fill="transparent">
+        <animateTransform attributeName="transform" type="rotate" values="-5;5;-5"
+            dur="2s" repeatCount="indefinite"/>
+      </path>
+    `;
 
-      const confettis = Array.from({length: 100}).map(() => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height - canvas.height,
-        w: 6,
-        h: 10,
-        color: `hsl(${Math.random() * 360}, 100%, 60%)`,
-        speed: Math.random() * 3 + 2
-      }));
+    balloon.appendChild(rope);
+    document.body.appendChild(balloon);
 
-      function draw() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        confettis.forEach(c => {
-          ctx.fillStyle = c.color;
-          ctx.fillRect(c.x, c.y, c.w, c.h);
-          c.y += c.speed;
-          if(c.y > canvas.height) c.y = -10;
-        });
-        requestAnimationFrame(draw);
-      }
-      draw();
-    }
-
-    // Balloons animation (mix of photo + colorful)
-    function createBalloons() {
-      for (let i = 0; i < 7; i++) {
-        const balloon = document.createElement('div');
-        balloon.classList.add('balloon');
-        balloon.style.left = Math.random() * 100 + 'vw';
-        balloon.style.animationDuration = (5 + Math.random() * 5) + 's';
-
-        // Randomize: 50% photo balloon, 50% colorful balloon
-        if (Math.random() > 0.5) {
-          balloon.style.background = `url('trainer.webp') no-repeat center / cover`;
-          balloon.style.borderRadius = "50%"; // round for photo balloons
-        } else {
-          balloon.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
-          balloon.style.borderRadius = "50% 50% 50% 50%"; // oval for colorful balloons
-        }
-
-        document.body.appendChild(balloon);
-        setTimeout(() => balloon.remove(), 10000);
-      }
-    }
-  </script>
-</body>
-</html>
+    setTimeout(() => balloon.remove(), 10000);
+  }
+}
