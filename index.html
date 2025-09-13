@@ -70,16 +70,28 @@
       background-size: cover;
       background-position: center;
     }
-    /* Rope for balloon */
+    /* Curly rope for balloon */
     .balloon::after {
       content: "";
       position: absolute;
-      bottom: -50px;
+      bottom: -60px;
       left: 50%;
       width: 2px;
-      height: 50px;
-      background: #555;
-      transform: translateX(-50%);
+      height: 60px;
+      background: repeating-linear-gradient(
+        to bottom,
+        #555 0px,
+        #555 4px,
+        transparent 4px,
+        transparent 8px
+      );
+      transform: translateX(-50%) rotate(5deg);
+      animation: ropeWave 1s infinite ease-in-out;
+    }
+    @keyframes ropeWave {
+      0%   { transform: translateX(-50%) rotate(5deg); }
+      50%  { transform: translateX(-50%) rotate(-5deg); }
+      100% { transform: translateX(-50%) rotate(5deg); }
     }
     @keyframes floatUp {
       from { transform: translateY(0); }
